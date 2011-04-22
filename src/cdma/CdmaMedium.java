@@ -56,6 +56,7 @@ public class CdmaMedium extends Thread {
 	 @Override
 	public void run() {
 //		 Timer timer = new Timer(); // funciona assim?
+		 final int FIRST = 0;
 		 try {
 			DataOutputStream output = new DataOutputStream(  clientSocket.getOutputStream());
 			
@@ -67,6 +68,18 @@ public class CdmaMedium extends Thread {
 //					output.writeBytes(myBuffer + "\n\n");
 //				}
 				
+				if(myBuffer.size() > 0){
+//					System.out.println("Enviando ao servidor: ");
+					for(int i = 0; i < myBuffer.get(FIRST).length; i++){
+//						System.out.println(myBuffer.get(FIRST)[i] + " ");
+						// enviando cada um dos elementos
+						output.writeBytes( myBuffer.get(FIRST)[i] + "\n\n"); 
+					}
+//					System.out.println();
+					myBuffer.remove(FIRST);
+				}else{
+//					System.out.println("não há nada para enviar");
+				}
 			}
 				
 				
@@ -150,8 +163,9 @@ public class CdmaMedium extends Thread {
 	 * @param id
 	 */
 	public void sendMessage(int[] chipedMsg, int id) {
-		int counter = clientMsgCounter[id]; 
-		if (counter > myBuffer.size()) {
+		int counter = clientMsgCounter[id];
+		clientMsgCounter[id]++;
+		if (counter >= myBuffer.size()) {
 			myBuffer.add( new int[Server.CLIENT_MAX]);
 		}
 		
