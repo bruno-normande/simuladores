@@ -9,14 +9,13 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		CdmaMedium medium = CdmaMedium.getInstance();
-		final int NUM_CLIENTS = 1; 
+		final int NUM_CLIENTS = 2; 
 		
 		medium.startServer(); // inicia o servidor
 		medium.start();
 		
-		for(int i = 0; i < NUM_CLIENTS; i++){
-			medium.startNewClient();
-		}
+		medium.startNewClient("./entrada.bin");
+		medium.startNewClient("./entrada.txt");
 		
 		
 //		int opcao;

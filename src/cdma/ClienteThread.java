@@ -1,5 +1,6 @@
 package cdma;
 
+import java.awt.BufferCapabilities.FlipContents;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +21,8 @@ import cdma.CdmaMedium;
 public class ClienteThread extends Thread {
 	private static int clientCounter = 0;
 	
+	private IInputStrategy entrada;
+	
 	private int myId;
 	
 	private int[] chip;
@@ -30,46 +33,64 @@ public class ClienteThread extends Thread {
 	
 	/** Recebe como parametro o meio no qual está inserido
 	 * @param meio */
-	public ClienteThread(CdmaMedium medium, int[] chip) {
+	public ClienteThread(CdmaMedium medium, String fileIn, int[] chip) {
 		myId = clientCounter; 
 		clientCounter++;
 		myMedium = medium;
 		this.chip = chip;
+		
+		File file = new File(fileIn);
+		String[] fileName = fileIn.split("\\.");
+		String extencao = fileName[fileName.length - 1];
+		
+		if(extencao.equals("bin")){ //binário
+			entrada = new BinInputStragy(file);
+		}else if(extencao.equals("txt")){
+			entrada = new TextInputStragy(file);
+		}
+		
 		this.run();
 	}
 	
 	@Override
 	public void run() {
-		String msg;
-		File file = new File("./entrada.bin");
-		Scanner scaner;
 		String string;
 		int bit;
+
 		
-//		while(true){
+		while(entrada.hasNext()){
+			string = entrada.getByte();
 			
-		System.out.println("Cliente "+ myId + " arquivo de entrada: " + file.getAbsolutePath());
-				if(file.canRead()){ // se o arquivo pode ser lido
-					try {
-						// isso só serve para entrada binária
-						scaner = new Scanner( new BufferedReader( new FileReader(file)));
-						while(scaner.hasNext()){
-							string = scaner.nextLine();
-							
-							System.out.print("Cliente "+ myId + " Enviando: ");
-							for(int i = 0; i < string.length(); i++){
-								bit = Integer.parseInt("" + string.charAt(i));
-								System.out.print( bit );// envia cada um
-								sendBit(bit);
-							}
-							System.out.println();
-						}
-						
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
+			System.out.print("Cliente "+ myId + " Enviando: "+ entrada.getToken() );
+			System.out.println();
+			for(int i = 0; i < string.length(); i++){
+				bit = Integer.parseInt("" + string.charAt(i));
+				sendBit(bit);
+			}
+		}
 			
+//		System.out.println("Cliente "+ myId + " arquivo de entrada: " + fileBin.getAbsolutePath());
+//				if(fileBin.canRead()){ // se o arquivo pode ser lido
+//					try {
+//						// isso só serve para entrada binária
+//						scaner = new Scanner( new BufferedReader( new FileReader(fileBin)));
+//						while(scaner.hasNext()){
+//							string = scaner.nextLine();
+//							
+//							System.out.print("Cliente "+ myId + " Enviando: ");
+//							for(int i = 0; i < string.length(); i++){
+//								bit = Integer.parseInt("" + string.charAt(i));
+//								System.out.print( bit );// envia cada um
+//								sendBit(bit);
+//							}
+//							System.out.println();
+//						}
+//						
+//					} catch (FileNotFoundException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			
 //			msg = JOptionPane.showInputDialog(null, "Digite sua mensagem:", "Digite sua mensagem", JOptionPane.QUESTION_MESSAGE);
 //			sendCDMAMessage(msg);
 //			System.out.println("Mensagem enviada -- " + msg);
@@ -96,9 +117,7 @@ public class ClienteThread extends Thread {
 	
 	/** envia um bit para o servidor */
 	private void sendBit(int bit){
-		if(bit != 1){ // transforma 0 em -1
-			bit = -1;
-		}
+		bit = (bit != 1) ? -1 : 1; // transforma 0 em -1
 		int[] bitChiped = new int[chip.length];
 		for(int i = 0; i < chip.length; i++){
 			bitChiped[i] = chip[i] * bit;

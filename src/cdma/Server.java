@@ -32,7 +32,9 @@ public class Server extends Thread {
 	// code chip de cada usuario
 	private ArrayList<int[]> codeChips;
 	// bits decodificados dos usuarios
-	private ArrayList<ArrayList<Integer>> bitsDecoded; 
+	private ArrayList<ArrayList<Integer>> bitsDecoded;
+	// diz de um determinado cliente está enviando characteres ou não
+	private ArrayList<Boolean> isChar;
 	
 	/**
 	 * inicia um server que escuta na porta passada como parametro
@@ -43,6 +45,11 @@ public class Server extends Thread {
 		welcomeSocket = new ServerSocket(port);
 		codeChips = new ArrayList<int[]>();
 		bitsDecoded = new ArrayList<ArrayList<Integer>>();
+		isChar = new ArrayList<Boolean>();
+		
+		for(int i = 0; i < CLIENT_MAX; i++){
+			isChar.add(false);
+		}
 		
 		clientCount = 0;
 		
@@ -78,12 +85,17 @@ public class Server extends Thread {
 						bit += bitCoded[j]*codeChips.get(i)[j];
 					}
 					bit /= CHIP_TAM;
-					bit = bit < 0 ? 0 : 1;
+					bit = bit <= 0 ? 0 : 1;
 					bitsDecoded.get(i).add(bit);
 					if(bitsDecoded.get(i).size() == BYTE_SIZE){
-						System.out.print("Cliete " + i + " :");
+						System.out.print("Cliete " + i + " : ");
+						String msgBytes = "";
 						for(int j = 0; j < BYTE_SIZE; j++){
-							System.out.print( bitsDecoded.get(i).remove(0) );
+							msgBytes += bitsDecoded.get(i).remove(0);
+						}
+						System.out.print( msgBytes );
+						if(!isChar.get(i)){
+							System.out.print( " : " + toCharToken(msgBytes) );
 						}
 						System.out.println();
 					}
@@ -93,6 +105,20 @@ public class Server extends Thread {
 			e.printStackTrace();
 		}
 		
+	}
+
+	private String toCharToken(String msgBytes) {
+		String token = "";
+		int charValue = 0;
+		
+		for(int i = 0; i < msgBytes.length(); i++){
+			int bit = (msgBytes.charAt( msgBytes.length() -1 - i ) == '1') ? 1 : 0;
+			charValue += bit * Math.pow(2, i);
+		}
+		
+		token = charValue + " : " + Character.toChars(charValue)[0];
+		
+		return token;
 	}
 
 	/**
@@ -109,6 +135,18 @@ public class Server extends Thread {
 		}else {
 			return null;
 		}
+	}
+
+	public int[] connectNewBinClient() {
+		int[] chip = connectNewClient();
+		isChar.set(clientCount - 1, false);
+		return chip;
+	}
+
+	public int[] connectNewTextClient() {
+		int[] chip = connectNewClient();
+		isChar.set(clientCount - 1, true);
+		return chip;
 	}
 
 }

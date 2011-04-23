@@ -1,2 +1,14 @@
 Implementação de simuladores de CDMA e Diffserv para a matéria de 
 redes2 - Ciência da computação - IC - UFAL
+
+Existem duas entradas:
+
+entrada.bin
+	entrada em binário
+	cada linha deve conter um byte, ex:
+		10011101
+		00111010
+
+entrada.txt -> entrada em texto normal
+
+Ambos são lidos automaticamente, se quiser testar uma entrada diferente, basta mudar o conteúdo dos arquivos

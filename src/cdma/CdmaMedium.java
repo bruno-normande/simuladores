@@ -61,7 +61,7 @@ public class CdmaMedium extends Thread {
 			DataOutputStream output = new DataOutputStream(  clientSocket.getOutputStream());
 			
 			while(true){
-				Thread.sleep(2000);
+				Thread.sleep(500);
 				// TODO botar para enviar a mensagem
 //				if(myBuffer.length() != 0){
 //					System.out.println("sending ");
@@ -146,10 +146,19 @@ public class CdmaMedium extends Thread {
 		
 	}
 
-	public void startNewClient() {
-		int[] chip = theServer.connectNewClient();
+	public void startNewClient(String fileIn) {
+		int[] chip;
+		String[] fileName = fileIn.split("\\.");
+		String extencao = fileName[fileName.length - 1];
+		
+		if(extencao.equals("txt")){ //binário
+			chip = theServer.connectNewBinClient();
+		}else{
+			chip = theServer.connectNewTextClient();
+		}
+		
 		if(chip != null){
-			clientes.add( new ClienteThread(this, chip));
+			clientes.add( new ClienteThread(this, fileIn, chip));
 		}else{
 			System.out.println("Cannot connect more clients!");
 		}
