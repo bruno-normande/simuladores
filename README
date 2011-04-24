@@ -1,6 +1,7 @@
 Implementação de simuladores de CDMA e Diffserv para a matéria de 
 redes2 - Ciência da computação - IC - UFAL
 
+CDMA ------------------------------------------------------------------------------------------------------------
 Existem duas entradas:
 
 entrada.bin
@@ -12,3 +13,10 @@ entrada.bin
 entrada.txt -> entrada em texto normal
 
 Ambos são lidos automaticamente, se quiser testar uma entrada diferente, basta mudar o conteúdo dos arquivos
+CDMA ------------------------------------------------------------------------------------------------------------
+
+Diffserv ------------------------------------------------------------------------------------------------------------
+A função de medição não foi implementada pois seu comportamento não está definido dentro do protocolo diffserv.
+Assumimos que todos os host se comportam de acordo com seu perfil de tráfego.
+
+Diffserv ------------------------------------------------------------------------------------------------------------
