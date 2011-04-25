@@ -3,10 +3,7 @@ package cdma;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Timer;
 
 /**
  *	Essa classe representa o meio no qual o servidor e os clientes
@@ -62,16 +59,9 @@ public class CdmaMedium extends Thread {
 			
 			while(true){
 				Thread.sleep(500);
-				// TODO botar para enviar a mensagem
-//				if(myBuffer.length() != 0){
-//					System.out.println("sending ");
-//					output.writeBytes(myBuffer + "\n\n");
-//				}
 				
 				if(myBuffer.size() > 0){
-//					System.out.println("Enviando ao servidor: ");
 					for(int i = 0; i < myBuffer.get(FIRST).length; i++){
-//						System.out.println(myBuffer.get(FIRST)[i] + " ");
 						// enviando cada um dos elementos
 						output.writeBytes( myBuffer.get(FIRST)[i] + "\n\n"); 
 					}
@@ -88,49 +78,7 @@ public class CdmaMedium extends Thread {
 		 };
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
-//	public static void main(String[] args) throws IOException {
-//		Server server = new Server(PORTA);
-//		Socket clientSocket;
-//		Character b;
-//		server.start();
-//		Timer timer = new Timer();
-//		
-//		clientSocket = new Socket("localhost", PORTA);
-//		
-//		DataOutputStream output = new DataOutputStream(  clientSocket.getOutputStream());
-//		while(true){
-//			try {
-//				Thread.sleep(2000);
-//				
-//				if(myBuffer.length() > 0){
-//					System.out.println("sending " + myBuffer );
-//					output.writeBytes(myBuffer + "\n\n");
-//					
-//				}else{
-//					System.out.println("Nada a ser enviado.");
-//				}
-//				
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//	}
-
 	
-	/**
-	 * Store the senders message into the buffer
-	 * @param msg
-	 */
-//	public void sendMessage(ClienteThread sender ,String msg) {
-//		myBuffer = msg; // TODO soma a mensagem
-//		
-//	}
-
 	/** inicia o servidor */
 	public void startServer() {
 		try {

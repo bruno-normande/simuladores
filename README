@@ -12,7 +12,14 @@ entrada.bin
 
 entrada.txt -> entrada em texto normal
 
-Ambos são lidos automaticamente, se quiser testar uma entrada diferente, basta mudar o conteúdo dos arquivos
+Ambos são lidos automaticamente, se quiser testar uma entrada diferente, basta mudar o conteúdo dos arquivos.
+
+Para adionar mais clientes:
+	Adiconar em Main.main a seguinte chamada 'medium.startNewClient("/path/para/sua/entrada.[bin - txt]");'
+	as extensões devem ser .txt ou .bin
+	
+O limite de clientes é 4
+	
 CDMA ------------------------------------------------------------------------------------------------------------
 
 Diffserv ------------------------------------------------------------------------------------------------------------

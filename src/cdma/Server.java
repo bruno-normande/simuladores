@@ -8,10 +8,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JTextArea;
-
-import cdma.CdmaMedium;
-
 /**
  * Esse será o servidor ele receberá a conexão e atribuirá um codigo para ela
  * sempre que requisitado.
@@ -79,15 +75,19 @@ public class Server extends Thread {
 				for(int i = 0; i < CHIP_TAM; i++){
 					bitCoded[i] = scanner.nextInt();
 				}
+				// para cada cliente
 				for(int i = 0; i < clientCount; i++){
-					bit = 0;
+					//decodifica o bit de acordo com o protocolo CDMA
+					bit = 0; 
 					for(int j = 0; j < CHIP_TAM; j++){
 						bit += bitCoded[j]*codeChips.get(i)[j];
 					}
 					bit /= CHIP_TAM;
 					bit = bit <= 0 ? 0 : 1;
+					
+					// adiciona ao vetor de bits decodificados desse cliente
 					bitsDecoded.get(i).add(bit);
-					if(bitsDecoded.get(i).size() == BYTE_SIZE){
+					if(bitsDecoded.get(i).size() == BYTE_SIZE){ // se já decodificou um byte desse cliente
 						System.out.print("Cliete " + i + " : ");
 						String msgBytes = "";
 						for(int j = 0; j < BYTE_SIZE; j++){
@@ -107,6 +107,12 @@ public class Server extends Thread {
 		
 	}
 
+	/**
+	 * Cria um token do caracter, contendo seu valor númerico e 
+	 * o caracter em sí
+	 * @param msgBytes
+	 * @return
+	 */
 	private String toCharToken(String msgBytes) {
 		String token = "";
 		int charValue = 0;
@@ -137,12 +143,20 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Conecta um novo cliente que enviará código binário
+	 * @return code chip
+	 */
 	public int[] connectNewBinClient() {
 		int[] chip = connectNewClient();
 		isChar.set(clientCount - 1, false);
 		return chip;
 	}
 
+	/**
+	 * Conecta um novo cliente que enviará characteres
+	 * @return code chip
+	 */
 	public int[] connectNewTextClient() {
 		int[] chip = connectNewClient();
 		isChar.set(clientCount - 1, true);

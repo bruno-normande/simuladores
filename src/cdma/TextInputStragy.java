@@ -49,7 +49,7 @@ public class TextInputStragy implements IInputStrategy {
 		
 		charInByte = charToByte(character);
 		
-		token = character + " : " + Character.getNumericValue(character) + " : " + charInByte;
+		token = character + " : " + (int)character + " : " + charInByte;
 		
 		return charInByte;
 	}
@@ -57,7 +57,7 @@ public class TextInputStragy implements IInputStrategy {
 	// retorna uma string com a codificação bit by bit do char
 	private String charToByte(char c) {
 		String bits = "";
-		int charValue = Character.getNumericValue(c);
+		int charValue = (int)c;
 		int bit;
 		
 		for(int i = 0; i < Server.BYTE_SIZE; i++){
